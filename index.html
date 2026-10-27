@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shop Spero Drop-Day Pickup Planner</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#eef1f5;--surf:#fff;--ink:#14213a;--mute:#5d6b82;--line:#d5dbe5;--brand:#0b3a6e;--gold:#e8a900;--ok:#1d7a4a;--warn:#b3411f;--btn-ink:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1626;--surf:#16223a;--ink:#e8edf6;--mute:#9aa8c0;--line:#2a3856;--brand:#7fb0ee;--gold:#f2bd2c;--ok:#5fd08e;--warn:#ff9672;--btn-ink:#0e1626}}
+:root[data-theme="dark"]{--bg:#0e1626;--surf:#16223a;--ink:#e8edf6;--mute:#9aa8c0;--line:#2a3856;--brand:#7fb0ee;--gold:#f2bd2c;--ok:#5fd08e;--warn:#ff9672;--btn-ink:#0e1626}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 Manrope,system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:20px 20px 0;max-width:1100px;margin:auto}
+h1{font-size:26px;font-weight:800;margin:0;letter-spacing:-.02em}
+header p{margin:4px 0 0;color:var(--mute);max-width:62ch}
+nav{display:flex;gap:4px;max-width:1100px;margin:16px auto 0;padding:0 20px;overflow-x:auto;border-bottom:1px solid var(--line)}
+nav button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 14px;font:600 14px Manrope,system-ui,sans-serif;color:var(--mute);cursor:pointer;white-space:nowrap}
+nav button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--gold)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+main{max-width:1100px;margin:auto;padding:20px}
+.panel{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px}
+.panel h2{font-size:17px;margin:0 0 4px}.sub{color:var(--mute);margin:0 0 12px;font-size:13.5px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+label{display:block;font-size:12.5px;font-weight:600;color:var(--mute);margin-bottom:3px}
+input,select,textarea{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font:inherit}
+textarea{min-height:90px;font:12.5px/1.4 ui-monospace,Menlo,monospace}
+.btn{background:var(--brand);color:var(--btn-ink);border:0;border-radius:6px;padding:9px 14px;font:600 14px Manrope,system-ui,sans-serif;cursor:pointer}
+.btn.alt{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.gold{background:var(--gold);color:#14213a}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.stat{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:116px}
+.stat b{display:block;font-size:22px;font-weight:800}.stat span{font-size:12.5px;color:var(--mute)}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12.5px;color:var(--mute);font-weight:600;white-space:nowrap}
+td small{display:block;color:var(--mute)}
+.tag{display:inline-block;border-radius:99px;padding:1px 9px;font-size:12px;font-weight:600;border:1px solid var(--line)}
+.tag.bad{border-color:var(--warn);color:var(--warn)}.tag.good{border-color:var(--ok);color:var(--ok)}
+tr.done td{opacity:.5;text-decoration:line-through}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.chip{display:inline-flex;gap:6px;align-items:center;background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:3px 6px 3px 12px;font-weight:600}
+.chip button{border:0;background:none;color:var(--mute);cursor:pointer;font-size:16px;line-height:1}
+.slot{break-inside:avoid}
+.slot h3{margin:0;font-size:17px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.slot h3 span+span{color:var(--mute);font-weight:600;font-size:14px}
+.bar{height:6px;background:var(--line);border-radius:9px;margin:8px 0 8px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ok)}
+.item{display:flex;gap:10px;padding:7px 0;border-bottom:1px dashed var(--line);cursor:pointer}
+.item input{width:20px;height:20px;margin-top:2px;flex:none}
+.item .meta{color:var(--mute);font-weight:400}
+.empty{color:var(--mute);padding:18px;text-align:center;border:1px dashed var(--line);border-radius:8px}
+.warn{color:var(--warn);font-weight:600}
+.staffrow{display:flex;gap:10px;align-items:center;margin:2px 0 6px;font-size:13.5px;color:var(--mute)}.staffrow select{width:auto}
+body:not(.staff) .staffonly{display:none!important}
+.slotgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;margin:8px 0 14px}
+.slotbtn{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer;font-weight:600;margin:0;color:var(--ink);font-size:14px}
+.slotbtn input{width:auto}
+.slotbtn:has(input:checked){border-color:var(--gold);box-shadow:0 0 0 2px var(--gold)}
+a.btn{display:inline-block;text-decoration:none}
+[hidden]{display:none!important}
+@media print{body{background:#fff;color:#000}nav,header p,.noprint{display:none!important}.panel{border:1px solid #999;background:#fff}:root{--ink:#000;--mute:#444;--brand:#000;--line:#bbb}}
+</style>
+</head>
+<body>
+<header>
+  <div class="row noprint staffonly" style="justify-content:flex-end;margin:0 0 4px"><span id="who" class="sub" style="margin:0"></span><button class="btn alt" id="signout">Sign out</button></div>
+  <h1 id="h1">Shop Spero drop-day pickup planner</h1>
+  <p id="hp">Paste in the orders from your form spreadsheet, staff each pickup slot, bag everything ahead of time, then check customers off as they collect.</p>
+</header>
+<nav role="tablist" class="noprint staffonly">
+  <button role="tab" data-tab="orders" aria-selected="true">1. Orders</button>
+  <button role="tab" data-tab="team" aria-selected="false">2. Team and slots</button>
+  <button role="tab" data-tab="pack" aria-selected="false">3. Pack list</button>
+  <button role="tab" data-tab="desk" aria-selected="false">4. Pickup sheets</button>
+</nav>
+<div class="sub staffonly" id="sync" role="status" style="padding:0 20px;max-width:1100px;margin:8px auto 0"></div>
+<main>
+<section id="login" hidden>
+  <div class="panel" style="max-width:420px;margin:24px auto">
+    <h2>Staff sign in</h2>
+    <p class="sub">Shop Spero staff only. Use the email and password your admin set up for you.</p>
+    <div style="display:grid;gap:10px"><div><label for="l-email">Email</label><input id="l-email" type="email" autocomplete="username"></div><div><label for="l-pass">Password</label><input id="l-pass" type="password" autocomplete="current-password"></div></div>
+    <div class="row"><button class="btn" id="lbtn">Sign in</button></div>
+    <p class="warn" id="lmsg" role="status" style="margin-top:10px"></p>
+  </div>
+</section>
+<div class="stats staffonly" id="stats"></div>
+
+<section id="tab-orders" class="staffonly" hidden>
+  <div class="panel noprint">
+    <h2>Paste orders from your spreadsheet</h2>
+    <p class="sub">Copy the rows from your order-form sheet, header row included. It reads Name, Phone Number / Email, Size, How would you like to receive your product, Shipping Address, and Pickup Slot. Item defaults to Hoodie and quantity to 1 when the sheet has no such columns. Other columns are ignored.</p>
+    <textarea id="csv" placeholder="Name,Phone Number / Email,Size,How would you like to receive your product? (pickup or delivery),Shipping Address (if delivery),Pickup Slot"></textarea>
+    <div class="row"><button class="btn" id="imp">Import orders</button><button class="btn alt" id="sample">Load sample data</button></div>
+  </div>
+  <div class="panel noprint">
+    <h2>Add one order</h2>
+    <div class="grid">
+      <div><label for="f-name">Customer name</label><input id="f-name"></div>
+      <div><label for="f-contact">Phone number / email</label><input id="f-contact"></div>
+      <div><label for="f-item">Item</label><input id="f-item" list="items" value="Hoodie"><datalist id="items"></datalist></div>
+      <div><label for="f-size">Size</label><select id="f-size"><option>XS</option><option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option></select></div>
+      <div><label for="f-method">How would you like to receive your product?</label><select id="f-method"><option value="pickup">Pickup</option><option value="delivery">Delivery</option></select></div>
+      <div><label for="f-addr">Shipping address (if delivery)</label><input id="f-addr"></div>
+      <div><label for="f-qty">Qty</label><input id="f-qty" type="number" min="1" value="1"></div>
+      <div><label for="f-slot">Pickup slot</label><input id="f-slot" list="slots" placeholder="e.g. Tuesday 12–2 PM"><datalist id="slots"></datalist></div>
+      <div><label for="f-notes">Notes</label><input id="f-notes"></div>
+    </div>
+    <div class="row"><button class="btn" id="add">Add order</button><span id="msg" class="warn"></span></div>
+  </div>
+  <div class="panel">
+    <h2>All orders</h2>
+    <div class="scroll" id="orders"></div>
+    <div class="row noprint"><button class="btn alt" id="exp">Copy as CSV</button><button class="btn alt" id="clr">Clear all orders</button></div>
+  </div>
+</section>
+
+<section id="tab-team" class="staffonly" hidden>
+  <div class="panel noprint">
+    <h2>Team on shift</h2>
+    <div class="row" style="margin-top:0"><input id="t-name" placeholder="Team member name" style="max-width:260px"><button class="btn" id="t-add">Add member</button></div>
+    <div class="chips" id="chips"></div>
+  </div>
+  <div class="panel noprint">
+    <h2>Pickup times you’re offering</h2>
+    <p class="sub">Keep these identical to the pickup options in your order form. Customers who say a time doesn’t work are grouped separately so a team member can arrange one with them.</p>
+    <div class="row" style="margin-top:0"><input id="o-name" placeholder="e.g. Tuesday 12–2 PM" style="max-width:260px"><button class="btn" id="o-add">Add time</button></div>
+    <div class="chips" id="offchips"></div>
+  </div>
+  <div class="panel">
+    <h2>Pickup slots and who’s staffing them</h2>
+    <p class="sub">Slots come from the pickup slot column of your orders. “Assign staff” gives each slot a lead, balancing by order count so busy slots get covered and nobody gets them all. You can change any slot below.</p>
+    <div class="row noprint" style="margin:0 0 10px"><button class="btn gold" id="assign">Assign staff</button><span id="amsg" class="warn"></span></div>
+    <div class="scroll" id="slotlist"></div>
+  </div>
+</section>
+
+<section id="tab-pack" class="staffonly" hidden>
+  <div class="panel">
+    <div class="row noprint" style="margin:0 0 8px"><h2 style="margin:0;flex:1">Pack list</h2><button class="btn alt" onclick="window.print()">Print</button></div>
+    <p class="sub">Total units to pull from inventory for orders not yet picked up.</p>
+    <div class="scroll" id="pack"></div>
+  </div>
+  <div id="bags"></div>
+</section>
+
+<section id="tab-desk" class="staffonly" hidden>
+  <div class="row noprint" style="margin:0 0 12px"><button class="btn alt" onclick="window.print()">Print all pickup sheets</button></div>
+  <div id="desk"></div>
+</section>
+</main>
+
+<div id="toast" class="staffonly noprint" role="status" hidden style="position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;z-index:20;max-width:90%"></div>
+<script>
+(function(){
+var KEY="spero-pickup-v1",S={orders:[],team:[],staff:{}},$=function(i){return document.getElementById(i)};
+function load(){S={orders:[],team:[],staff:{},offered:["Tuesday 12–2 PM"]}}
+function save(){if(typeof CLOUD!=="undefined"&&CLOUD)queue()}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+var NO="No slot yet",OT="Arrange another time",OTLABEL="Doesn’t work, arrange another time",OTRE=/doesn.?t work|another time|different time|other time|arrange|not work|meet with/i,DAYS=["mon","tue","wed","thu","fri","sat","sun"];
+function skey(s){if(s===NO)return 9e9;if(s===OT)return 8e9;var t=s.toLowerCase(),d=9,dm=t.match(/(\d{1,2})\/(\d{1,2})/);
+ if(dm){d=+dm[1]*40+ +dm[2];t=t.replace(dm[0],"")}else DAYS.forEach(function(x,i){if(t.indexOf(x)>-1&&d===9)d=i});
+ var m=t.match(/(\d{1,2})(?::(\d\d))?\s*(am|pm)?/),h=m?+m[1]+(m[2]?m[2]/60:0):0;
+ if(m){if(m[3]==="pm"&&h<12)h+=12;else if(!m[3]&&/pm/.test(t)&&h<12)h+=12;else if(m[3]==="am"&&h===12)h=0}return d*100+h}
+function isDel(o){return o.method==="delivery"}
+function slotOf(o){var t=o.slot&&o.slot.trim();return t?(OTRE.test(t)?OT:t):NO}
+function nk(x){return String(x).toLowerCase().replace(/(\d)\s*(am|pm)/g,"$1").replace(/[^a-z0-9]/g,"")}
+function canon(s){s=String(s||"").trim();if(!s)return"";var m=S.offered.filter(function(x){return nk(x)===nk(s)})[0];return m||s}
+function slots(){var m={};S.orders.forEach(function(o){if(isDel(o))return;var k=slotOf(o);(m[k]=m[k]||[]).push(o)});
+ return Object.keys(m).sort(function(a,b){return skey(a)-skey(b)||(a<b?-1:1)}).map(function(k){return{name:k,orders:m[k]}})}
+function units(a){return a.reduce(function(n,o){return n+o.qty},0)}
+function isPaid(v){return !/^(no|n|unpaid|pending|false|0)$/i.test((v||"").trim())}
+
+function isStaff(){return document.body.classList.contains("staff")}
+function tab(n){if(!isStaff())return;["orders","team","pack","desk"].forEach(function(t){var el=$("tab-"+t);if(el)el.hidden=t!==n});
+ document.querySelectorAll("nav button").forEach(function(b){b.setAttribute("aria-selected",b.dataset.tab===n)});render()}
+document.querySelectorAll("nav button").forEach(function(b){b.onclick=function(){tab(b.dataset.tab)}});
+
+function addOrder(o){S.orders.push({id:uid(),no:o.no||"",name:o.name||"",contact:o.contact||"",item:o.item||"Hoodie",size:o.size||"",qty:Math.max(1,parseInt(o.qty)||1),
+ paid:isPaid(o.paid),method:/deliver|ship/i.test(o.method||"")?"delivery":"pickup",addr:o.addr||"",slot:canon(o.slot||""),notes:o.notes||"",packed:false,done:false})}
+$("add").onclick=function(){var n=$("f-name").value.trim();if(!n){$("msg").textContent="Enter the customer’s name.";return}if($("f-method").value==="delivery"&&!$("f-addr").value.trim()){$("msg").textContent="Enter the shipping address.";return}$("msg").textContent="";
+ addOrder({name:n,contact:$("f-contact").value,item:$("f-item").value.trim(),size:$("f-size").value,qty:$("f-qty").value,method:$("f-method").value,addr:$("f-addr").value,slot:$("f-slot").value,notes:$("f-notes").value});
+ ["f-name","f-contact","f-addr","f-notes"].forEach(function(i){$(i).value=""});$("f-qty").value=1;save();render();$("f-name").focus()};
+
+function parseCSV(t){var rows=[],r=[],c="",q=false;
+ for(var i=0;i<t.length;i++){var ch=t[i];
+  if(q){if(ch==='"'){if(t[i+1]==='"'){c+='"';i++}else q=false}else c+=ch}
+  else if(ch==='"')q=true;else if(ch===","||ch==="\t"){r.push(c);c=""}
+  else if(ch==="\n"||ch==="\r"){if(ch==="\r"&&t[i+1]==="\n")i++;r.push(c);c="";if(r.some(function(x){return x.trim()}))rows.push(r);r=[]}
+  else c+=ch}
+ r.push(c);if(r.some(function(x){return x.trim()}))rows.push(r);return rows}
+function colKey(h){h=h.trim().toLowerCase();
+ if(/timestamp/.test(h))return"";
+ if(/order\s*(#|no|num|id)|^id$/.test(h))return"no";
+ if(/address|shipping/.test(h))return"addr";
+ if(/receive|pickup or delivery|delivery or pickup|handoff/.test(h))return"method";
+ if(/slot|pick\s*-?up (time|date)|availab|window|^time|when/.test(h))return"slot";
+ if(/paid|payment/.test(h))return"paid";
+ if(/^(full\s*)?name|customer/.test(h))return"name";
+ if(/phone|email|contact/.test(h))return"contact";
+ if(/item|product|^order$/.test(h))return"item";
+ if(/size/.test(h))return"size";
+ if(/qty|quantity/.test(h))return"qty";
+ if(/note|comment|special/.test(h))return"notes";return""}
+$("imp").onclick=function(){var rows=parseCSV($("csv").value);if(rows.length<2){say("Paste a header row plus at least one order.");return}
+ var h=rows[0].map(colKey),n=0;
+ rows.slice(1).forEach(function(r){var o={};h.forEach(function(k,i){if(k&&!o[k])o[k]=(r[i]||"").trim()});if(o.name){addOrder(o);n++}});
+ $("csv").value="";save();render();say(n+" orders imported.")};
+$("sample").onclick=function(){$("csv").value='Name,Phone Number / Email,Size,How would you like to receive your product? (pickup or delivery),Shipping Address (if delivery),Pickup Slot\nGrace L.,510-555-0111,M,Pickup,,"11/2 - Upper Sproul, 10am - 12pm"\nDaniel K.,dk@berkeley.edu,L,Pickup,,"11/2 - Upper Sproul, 10am - 12pm"\nRuth A.,510-555-0142,S,Delivery,"2500 Durant Ave, Berkeley CA",\nMicah T.,mt@berkeley.edu,XL,Pickup,,"11/7 - Michael\'s place, 2 - 4pm"\nEsther P.,510-555-0190,M,Pickup,,\nJoshua W.,jw@berkeley.edu,M,Pickup,,'};
+$("exp").onclick=function(){var t=["name,contact,item,size,qty,receive,shipping address,paid,pickup slot,notes,staffed by,handed off"].concat(S.orders.map(function(o){
+  return[o.name,o.contact,o.item,o.size,o.qty,isDel(o)?"delivery":"pickup",o.addr||"",o.paid?"yes":"no",o.slot,o.notes,S.staff[slotOf(o)]||"",o.done?"yes":"no"].map(function(v){return'"'+String(v).replace(/"/g,'""')+'"'}).join(",")})).join("\n");
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){say("Copied. Paste it into a spreadsheet.")},function(){$("csv").value=t;say("Couldn’t copy automatically. The CSV is in the paste box.")});
+ else{$("csv").value=t;say("The CSV is in the paste box.")}};
+var clrArm=false,clrT=null;
+$("clr").onclick=function(){var b=$("clr");if(!clrArm){clrArm=true;b.textContent="Click again to remove all orders";clrT=setTimeout(function(){clrArm=false;b.textContent="Clear all orders"},4000);return}
+ clearTimeout(clrT);clrArm=false;b.textContent="Clear all orders";S.orders=[];S.staff={};save();render();say("All orders cleared.")};
+
+$("t-add").onclick=function(){var n=$("t-name").value.trim();if(n&&S.team.indexOf(n)<0){S.team.push(n);$("t-name").value="";save();render()}$("t-name").focus()};
+$("o-add").onclick=function(){var n=$("o-name").value.trim();if(n&&S.offered.indexOf(n)<0){S.offered.push(n);$("o-name").value="";save();render()}$("o-name").focus()};
+$("t-name").onkeydown=function(e){if(e.key==="Enter")$("t-add").click()};
+$("assign").onclick=function(){if(!S.team.length){$("amsg").textContent="Add at least one team member first.";return}
+ var ld={};S.team.forEach(function(t){ld[t]=0});S.staff={};
+ slots().filter(function(s){return s.name!==NO&&s.name!==OT}).sort(function(a,b){return b.orders.length-a.orders.length}).forEach(function(s){
+  var best=S.team.slice().sort(function(a,b){return ld[a]-ld[b]})[0];S.staff[s.name]=best;ld[best]+=s.orders.length});
+ $("amsg").textContent="";save();render()};
+
+function render(){if(!isStaff())return;
+ var open=S.orders.filter(function(o){return !o.done}),nos=S.orders.filter(function(o){return !isDel(o)&&(!o.slot||!o.slot.trim())}).length,unp=S.orders.filter(function(o){return !o.paid}).length;
+ $("stats").innerHTML=[[S.orders.length,"orders"],[units(open),"units to hand out"],[S.orders.length-open.length,"handed off"],[nos,"no slot yet"],[S.orders.filter(function(o){return !isDel(o)&&slotOf(o)===OT}).length,"need another time"],[S.orders.filter(isDel).length,"deliveries"],[unp,"payment unconfirmed"]].map(function(s){return'<div class="stat"><b>'+s[0]+'</b><span>'+s[1]+'</span></div>'}).join("");
+ var dl=["Hoodie","Tee","Crewneck"];S.orders.forEach(function(o){if(o.item&&dl.indexOf(o.item)<0)dl.push(o.item)});
+ $("items").innerHTML=dl.map(function(x){return'<option value="'+esc(x)+'">'}).join("");
+ $("offchips").innerHTML=S.offered.length?S.offered.map(function(t,i){return'<span class="chip">'+esc(t)+'<button data-ro="'+i+'" aria-label="Remove '+esc(t)+'">×</button></span>'}).join(""):'<div class="empty" style="width:100%">No pickup times yet.</div>';
+ var sl=slots();(function(){var op=S.offered.concat([OTLABEL]);sl.forEach(function(s){if(s.name!==NO&&s.name!==OT&&op.indexOf(s.name)<0)op.push(s.name)});$("slots").innerHTML=op.map(function(x){return'<option value="'+esc(x)+'">'}).join("")})();
+ $("orders").innerHTML=S.orders.length?'<table><thead><tr><th>Customer</th><th>Item</th><th>Pickup slot or delivery</th><th>Paid</th><th>Bagged</th><th>Handed off</th><th class="noprint"></th></tr></thead><tbody>'+
+  S.orders.map(function(o){return'<tr class="'+(o.done?"done":"")+'"><td>'+esc(o.name)+(o.no?' <small>#'+esc(o.no)+'</small>':"")+'<small>'+esc(o.contact)+'</small></td><td>'+esc(o.item)+' '+esc(o.size)+' × '+o.qty+(o.notes?'<small>'+esc(o.notes)+'</small>':"")+'</td><td>'+(isDel(o)?'<span class="tag">Delivery</span><small>'+esc(o.addr)+'</small>':(o.slot?(OTRE.test(o.slot)?'<span class="tag bad">Arrange another time</span>':esc(o.slot)):'<span class="tag bad">No slot</span>'))+'</td><td><input type="checkbox" data-paid="'+o.id+'"'+(o.paid?" checked":"")+' aria-label="Paid"></td><td><input type="checkbox" data-pk="'+o.id+'"'+(o.packed?" checked":"")+' aria-label="Bagged"></td><td><input type="checkbox" data-dn="'+o.id+'"'+(o.done?" checked":"")+' aria-label="Picked up"></td><td class="noprint"><button class="btn alt" data-del="'+o.id+'" aria-label="Delete order">Delete</button></td></tr>'}).join("")+'</tbody></table>'
+  :'<div class="empty">No orders yet. Paste your spreadsheet above, add one by hand, or load the sample data to try it out.</div>';
+ $("chips").innerHTML=S.team.length?S.team.map(function(t,i){return'<span class="chip">'+esc(t)+'<button data-rm="'+i+'" aria-label="Remove '+esc(t)+'">×</button></span>'}).join(""):'<div class="empty" style="width:100%">No team members yet.</div>';
+ $("slotlist").innerHTML=sl.length?'<table><thead><tr><th>Slot</th><th>Orders</th><th>Units</th><th>Staffed by</th></tr></thead><tbody>'+sl.map(function(s){
+  var cur=S.staff[s.name]||"",opts='<option value="">Nobody yet</option>'+S.team.map(function(t){return'<option'+(t===cur?" selected":"")+'>'+esc(t)+'</option>'}).join("");
+  return'<tr><td>'+((s.name===NO||s.name===OT)?'<span class="tag bad">'+esc(s.name)+'</span>':esc(s.name))+'</td><td>'+s.orders.length+'</td><td>'+units(s.orders)+'</td><td>'+(s.name===NO?'<small>Follow up with these customers first.</small>':s.name===OT?'<small>A team member arranges a time with each of these customers.</small>':'<select data-staff="'+esc(s.name)+'" aria-label="Staff for '+esc(s.name)+'">'+opts+'</select>')+'</td></tr>'}).join("")+'</tbody></table>':'<div class="empty">Slots appear here once you add orders.</div>';
+ var m={};open.forEach(function(o){var k=o.item+"|"+o.size;m[k]=(m[k]||0)+o.qty});var keys=Object.keys(m).sort();
+ $("pack").innerHTML=keys.length?'<table><thead><tr><th>Item</th><th>Size</th><th>Units to pull</th></tr></thead><tbody>'+keys.map(function(k){var p=k.split("|");return'<tr><td>'+esc(p[0])+'</td><td>'+esc(p[1])+'</td><td><b>'+m[k]+'</b></td></tr>'}).join("")+'<tr><td colspan="2"><b>Total</b></td><td><b>'+units(open)+'</b></td></tr></tbody></table>':'<div class="empty">Nothing to pack. Open orders show up here.</div>';
+ $("bags").innerHTML=delPanel("pk")+sl.map(function(s){var os=s.orders.filter(function(o){return !o.done});if(!os.length)return"";var b=os.filter(function(o){return o.packed}).length;
+  return'<div class="panel slot"><h3><span>Bag for '+esc(s.name)+'</span><span>'+b+' of '+os.length+' bagged</span></h3><div class="bar"><i style="width:'+Math.round(100*b/os.length)+'%"></i></div>'+
+  os.slice().sort(nameSort).map(function(o){return line(o,"pk",o.packed)}).join("")+'</div>'}).join("");
+ $("desk").innerHTML=(sl.length||S.orders.some(isDel))?delPanel("dn")+sl.map(function(s){var os=s.orders,d=os.filter(function(o){return o.done}).length;
+  return'<div class="panel slot"><h3><span>'+esc(s.name)+'</span><span>'+d+' of '+os.length+' picked up · '+units(os)+' units</span></h3>'+
+  '<div class="staffrow">'+(s.name===OT?"A team member arranges a time with each customer":"Staffed by: <b>"+esc(S.staff[s.name]||"nobody yet")+"</b>")+'</div><div class="bar"><i style="width:'+Math.round(100*d/os.length)+'%"></i></div>'+
+  os.slice().sort(nameSort).map(function(o){return line(o,"dn",o.done)}).join("")+'</div>'}).join(""):'<div class="empty">No pickup sheets yet. Add orders first.</div>';
+}
+function delPanel(k){var ds=S.orders.filter(isDel).filter(function(o){return k==="pk"?!o.done:true});if(!ds.length)return"";var d=ds.filter(function(o){return k==="pk"?o.packed:o.done}).length;
+ return'<div class="panel slot"><h3><span>'+(k==="pk"?"Bag for delivery":"Deliveries")+'</span><span>'+d+' of '+ds.length+' '+(k==="pk"?"bagged":"sent")+'</span></h3><div class="bar"><i style="width:'+Math.round(100*d/ds.length)+'%"></i></div>'+ds.slice().sort(nameSort).map(function(o){return line(o,k,k==="pk"?o.packed:o.done)}).join("")+'</div>'}
+function nameSort(a,b){return a.name.toLowerCase()>b.name.toLowerCase()?1:-1}
+function line(o,k,on){return'<label class="item"><input type="checkbox" data-'+k+'="'+o.id+'"'+(on?" checked":"")+'><span style="'+(on&&k==="dn"?"opacity:.5;text-decoration:line-through":"")+'"><b>'+esc(o.name)+'</b>'+(o.no?' #'+esc(o.no):"")+' — '+esc(o.item)+' '+esc(o.size)+' × '+o.qty+
+  (!o.paid?' <span class="tag bad">Unpaid</span>':"")+(k==="dn"&&o.packed?' <span class="tag good">Bagged</span>':"")+'<br><span class="meta">'+esc(o.contact)+(isDel(o)&&o.addr?" · "+esc(o.addr):"")+(o.notes?" · "+esc(o.notes):"")+'</span></span></label>'}
+function find(id){return S.orders.filter(function(x){return x.id===id})[0]}
+document.addEventListener("change",function(e){var t=e.target,d=t.dataset,o;
+ if(d.staff){if(t.value)S.staff[d.staff]=t.value;else delete S.staff[d.staff]}
+ else if(d.pk&&(o=find(d.pk)))o.packed=t.checked;
+ else if(d.dn&&(o=find(d.dn)))o.done=t.checked;
+ else if(d.paid&&(o=find(d.paid)))o.paid=t.checked;
+ else return;save();render()});
+document.addEventListener("click",function(e){var d=e.target.dataset;
+ if(d.del){S.orders=S.orders.filter(function(x){return x.id!==d.del});save();render()}
+ else if(d.ro){S.offered.splice(+d.ro,1);save();render()}else if(d.rm){var n=S.team.splice(+d.rm,1)[0];Object.keys(S.staff).forEach(function(k){if(S.staff[k]===n)delete S.staff[k]});save();render()}});
+function say(t){var e=$("toast");if(!e)return;e.textContent=t;e.hidden=false;clearTimeout(say.t);say.t=setTimeout(function(){e.hidden=true},6000)}
+var SB="https://nmhwsreoygspnmxwjorx.supabase.co",KEYP="sb_publishable_pkvrQh4a8KUF4i1zffjdTQ_gfe9zTZ_",SKEY="spero-session";
+var SES=null,CLOUD=null,dirty=false,writing=false,lastRev=0,tmr=null;
+function setSync(t){var e=$("sync");if(e)e.textContent=t}
+function sesSave(){try{if(SES)localStorage.setItem(SKEY,JSON.stringify(SES));else localStorage.removeItem(SKEY)}catch(e){}}
+function sesLoad(){try{SES=JSON.parse(localStorage.getItem(SKEY)||"null")}catch(e){SES=null}}
+async function authCall(path,body){var r=await fetch(SB+"/auth/v1/"+path,{method:"POST",headers:{apikey:KEYP,"Content-Type":"application/json"},body:JSON.stringify(body)}),j={};
+ try{j=await r.json()}catch(e){}
+ if(!r.ok)throw new Error(j.error_description||j.msg||j.message||"Sign-in failed");return j}
+function setSes(j){SES={access_token:j.access_token,refresh_token:j.refresh_token,expires_at:Date.now()+(j.expires_in||3600)*1000-60000,email:(j.user&&j.user.email)||(SES&&SES.email)||""};sesSave()}
+async function token(){if(!SES)throw new Error("Signed out");
+ if(Date.now()>SES.expires_at){try{setSes(await authCall("token?grant_type=refresh_token",{refresh_token:SES.refresh_token}))}catch(e){SES=null;sesSave();showLogin("Your session expired. Please sign in again.");throw e}}
+ return SES.access_token}
+async function api(method,path,body,extra){var tk=await token(),h={apikey:KEYP,Authorization:"Bearer "+tk,"Content-Type":"application/json"};if(extra)for(var k in extra)h[k]=extra[k];
+ var r=await fetch(SB+"/rest/v1/"+path,{method:method,headers:h,body:body?JSON.stringify(body):undefined});
+ if(!r.ok){var tx="";try{tx=await r.text()}catch(e){}throw new Error(tx||("Error "+r.status))}
+ try{return await r.json()}catch(e){return null}}
+function queue(){dirty=true;setSync("Saving…");clearTimeout(tmr);tmr=setTimeout(flush,600)}
+function flush(){if(!CLOUD||writing||!dirty)return;writing=true;dirty=false;var rev=Date.now();lastRev=rev;
+ api("POST","planner_state",{id:"main",data:{orders:S.orders,team:S.team,staff:S.staff,offered:S.offered,rev:rev},updated_at:new Date().toISOString()},{Prefer:"resolution=merge-duplicates,return=minimal"}).then(
+  function(){writing=false;if(dirty)flush();else setSync("Saved and shared with your team.")},
+  function(e){writing=false;dirty=true;setSync("Couldn’t save to the shared planner. Check your connection. "+String(e.message).slice(0,100))})}
+function applyRemote(d){S.orders=JSON.parse(JSON.stringify(d.orders||[]));S.team=JSON.parse(JSON.stringify(d.team||[]));S.staff=JSON.parse(JSON.stringify(d.staff||{}));if(Array.isArray(d.offered))S.offered=JSON.parse(JSON.stringify(d.offered))}
+async function pull(){if(!CLOUD)return;
+ try{var rows=await api("GET","planner_state?id=eq.main&select=data");
+  if(rows&&rows.length){var d=rows[0].data||{};if(!(d.rev&&d.rev===lastRev)){if(dirty||writing)return;applyRemote(d);render()}setSync("Shared with your team. Updates appear within about 15 seconds.")}
+  else if(S.orders.length||S.team.length)queue();else setSync("Connected. Add your first order.")}
+ catch(e){if(CLOUD)setSync("Couldn’t reach the shared planner. "+String(e.message).slice(0,100))}}
+function showLogin(msg){document.body.classList.remove("staff");CLOUD=null;dirty=false;writing=false;clearTimeout(tmr);load();$("who").textContent="";$("login").hidden=false;$("lmsg").textContent=msg||""}
+async function enterApp(){
+ try{var rows=await api("GET","staff_emails?select=email");if(!rows||!rows.length){SES=null;sesSave();showLogin("This account isn’t on the staff list. Ask your admin to add your email.");return}}
+ catch(e){if(SES)showLogin("Couldn’t reach the server. "+String(e.message).slice(0,100));return}
+ document.body.classList.add("staff");$("login").hidden=true;$("who").textContent=SES.email;CLOUD=true;load();render();tab("orders");setSync("Loading…");await pull()}
+$("lbtn").onclick=async function(){var e=$("l-email").value.trim().toLowerCase(),p=$("l-pass").value;if(!e||!p){$("lmsg").textContent="Enter your email and password.";return}
+ $("lmsg").textContent="Signing in…";
+ try{setSes(await authCall("token?grant_type=password",{email:e,password:p}));$("l-pass").value="";await enterApp()}
+ catch(x){$("lmsg").textContent=/invalid/i.test(x.message)?"That email or password isn’t right.":x.message}};
+$("l-pass").onkeydown=function(e){if(e.key==="Enter")$("lbtn").click()};
+$("signout").onclick=function(){SES=null;sesSave();showLogin("You’re signed out.")};
+setInterval(function(){if(CLOUD&&!dirty&&!writing)pull()},15000);
+document.addEventListener("visibilitychange",function(){if(!document.hidden&&CLOUD&&!dirty&&!writing)pull()});
+load();sesLoad();
+if(SES){$("lmsg").textContent="";enterApp()}else showLogin("");
+})();
+</script>
+</body>
+</html>
