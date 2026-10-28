@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spero Fulfillment</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{--font:"Inter",system-ui,-apple-system,Segoe UI,sans-serif;--bg:#faf8f5;--surf:#fff;--ink:#1a1a1a;--mute:#7a746b;--line:#e6e1d9;--accent:#1a1a1a;--on-accent:#fff;--warn:#a23b1e;--ok:#2f6b46}
+@media (prefers-color-scheme:dark){:root{--bg:#121110;--surf:#1a1918;--ink:#f1ede6;--mute:#9b948a;--line:#2c2a27;--accent:#f1ede6;--on-accent:#121110;--warn:#ff9a7a;--ok:#7fcf9f}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 14px/1.5 var(--font)}
+button,input,select{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.top{display:flex;align-items:center;gap:28px;padding:16px 24px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.brand{font-weight:600;letter-spacing:.34em;font-size:13px}
+#nav{display:flex;gap:20px;flex:1}
+#nav button{background:none;border:0;border-bottom:1px solid transparent;padding:4px 0;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);cursor:pointer}
+#nav button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.who{display:flex;gap:12px;align-items:center;color:var(--mute);font-size:12px}
+.link{background:none;border:0;padding:0;color:var(--ink);text-decoration:underline;cursor:pointer;font-size:12px}
+.sync{padding:6px 24px;color:var(--mute);font-size:12px;min-height:28px}
+main{max-width:980px;margin:0 auto;padding:8px 24px 64px}
+.stats{display:flex;gap:36px;flex-wrap:wrap;padding:20px 0 24px}
+.stats div{display:flex;flex-direction:column}
+.stats b{font-size:26px;font-weight:500;line-height:1.1}
+.stats span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.stats .w b{color:var(--warn)}
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.tools .grow{flex:1}
+input,select{background:var(--surf);border:1px solid var(--line);border-radius:6px;padding:8px 10px;min-width:0}
+input[type=search]{width:260px;max-width:100%}
+.btn{background:var(--accent);color:var(--on-accent);border:1px solid var(--accent);border-radius:6px;padding:8px 14px;cursor:pointer;font-weight:500}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.panel{background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:16px}
+.panel textarea{width:100%;min-height:110px;border:1px solid var(--line);border-radius:6px;padding:10px;background:var(--bg);font:12px/1.4 ui-monospace,Menlo,monospace;color:var(--ink)}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.form input,.form select{width:100%}
+.line{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.mute{color:var(--mute)}.warn{color:var(--warn)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}
+.chip{border:1px solid var(--line);border-radius:99px;padding:3px 12px;background:var(--surf);font-size:13px}
+.chip i{font-style:normal;color:var(--mute);margin-left:6px}
+.chip button{border:0;background:none;color:var(--mute);cursor:pointer;margin-left:6px;padding:0}
+.ghead{display:flex;align-items:center;gap:14px;padding:22px 0 8px;border-bottom:1px solid var(--ink);flex-wrap:wrap}
+.ghead b{font-weight:600;letter-spacing:.02em}
+.ghead .meta{color:var(--mute);font-size:12px;flex:1}
+.ghead select{padding:4px 8px;font-size:12px}
+.o{display:flex;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.o.done{opacity:.45}
+.o .main{flex:1;min-width:0}
+.o .main b{font-weight:500}
+.o .sub{color:var(--mute);font-size:12.5px}
+.ck{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--mute);white-space:nowrap;cursor:pointer}
+.ck input{width:18px;height:18px;margin:0;accent-color:var(--ink)}
+.tag{font-size:11px;border:1px solid var(--line);border-radius:99px;padding:1px 8px;margin-left:6px;white-space:nowrap}
+.tag.w{border-color:var(--warn);color:var(--warn)}
+.x{background:none;border:0;color:var(--mute);cursor:pointer;padding:4px 6px;font-size:12px}
+.empty{color:var(--mute);padding:40px 0;text-align:center}
+.h3{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:0 0 10px}
+#login{max-width:340px;margin:72px auto}
+#login input{width:100%;margin-bottom:10px}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:6px;z-index:9}
+[hidden]{display:none!important}
+body:not(.staff) .staffonly{display:none!important}
+@media (max-width:640px){.o{flex-wrap:wrap}.o .main{flex-basis:100%}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">SPERO</div>
+  <nav id="nav" class="staffonly"><button data-tab="dash" aria-selected="true">Dashboard</button><button data-tab="team" aria-selected="false">Team</button></nav>
+  <div class="who staffonly"><span id="who"></span><button class="link" id="signout">Sign out</button></div>
+</header>
+<div class="sync staffonly" id="sync" role="status"></div>
+<main>
+<section id="login" hidden>
+  <p class="h3">Staff sign in</p>
+  <input id="l-email" type="email" placeholder="Email" autocomplete="username">
+  <input id="l-pass" type="password" placeholder="Password" autocomplete="current-password">
+  <button class="btn" id="lbtn" style="width:100%">Sign in</button>
+  <p class="warn" id="lmsg" role="status"></p>
+</section>
+
+<section id="tab-dash" class="staffonly">
+  <div class="stats" id="stats"></div>
+  <div class="tools">
+    <input type="search" id="q" placeholder="Search name, contact or slot" aria-label="Search">
+    <select id="fslot" aria-label="Filter by slot"></select>
+    <label class="ck"><input type="checkbox" id="hd"> Hide handed off</label>
+    <span class="grow"></span>
+    <button class="btn ghost" id="b-sync">Sync orders</button>
+    <button class="btn" id="b-add">Add order</button>
+  </div>
+  <div class="panel" id="p-sync" hidden>
+    <textarea id="csv" placeholder="Paste the order sheet, header row included. Re-paste anytime: only new orders are added." aria-label="Order sheet rows"></textarea>
+    <div class="line"><button class="btn" id="go-sync">Sync</button><span id="syncres" class="mute"></span><span class="grow" style="flex:1"></span><button class="link" id="b-clear">Clear all orders</button></div>
+  </div>
+  <div class="panel" id="p-add" hidden>
+    <div class="form">
+      <input id="a-name" placeholder="Name" aria-label="Name">
+      <input id="a-contact" placeholder="Phone / email" aria-label="Phone or email">
+      <select id="a-size" aria-label="Size"><option>XS</option><option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option></select>
+      <input id="a-item" value="Hoodie" list="items" aria-label="Item"><datalist id="items"><option value="Hoodie"><option value="Tee"></datalist>
+      <input id="a-qty" type="number" min="1" value="1" aria-label="Quantity">
+      <select id="a-method" aria-label="Pickup or delivery"><option value="pickup">Pickup</option><option value="delivery">Delivery</option></select>
+      <input id="a-addr" placeholder="Shipping address" aria-label="Shipping address" hidden>
+      <input id="a-slot" placeholder="Pickup slot" list="slotopts" aria-label="Pickup slot"><datalist id="slotopts"></datalist>
+    </div>
+    <div class="line"><button class="btn" id="a-go">Add</button><span class="warn" id="a-msg"></span></div>
+  </div>
+  <div class="chips" id="pack"></div>
+  <div id="groups"></div>
+</section>
+
+<section id="tab-team" class="staffonly" hidden>
+  <p class="h3">Team</p>
+  <div class="line" style="margin-top:0"><input id="t-name" placeholder="Name" aria-label="Team member name"><button class="btn ghost" id="t-add">Add</button></div>
+  <div class="chips" id="chips" style="margin-top:12px"></div>
+  <p class="h3" style="margin-top:28px">Pickup times offered</p>
+  <div class="line" style="margin-top:0"><input id="o-name" placeholder="e.g. Tuesday 12–2 PM" aria-label="Pickup time"><button class="btn ghost" id="o-add">Add</button></div>
+  <div class="chips" id="offchips" style="margin-top:12px"></div>
+  <div class="line"><button class="btn" id="assign">Assign slots to team</button><span class="warn" id="amsg"></span></div>
+</section>
+</main>
+<div id="toast" hidden role="status"></div>
+<script>
+(function(){
+var S={orders:[],team:[],staff:{},offered:["Tuesday 12–2 PM"]};
+var NO="No slot yet",OT="Arrange another time",OTRE=/doesn.?t work|another time|different time|other time|arrange|not work|meet with/i,DAYS=["mon","tue","wed","thu","fri","sat","sun"];
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function nz(s){return String(s||"").toLowerCase().replace(/[^a-z0-9]/g,"")}
+function nk(x){return String(x).toLowerCase().replace(/(\d)\s*(am|pm)/g,"$1").replace(/[^a-z0-9]/g,"")}
+function cinfo(s){s=String(s||"").toLowerCase();var re=/[^\s;,|<>]+@[^\s;,|<>]+/g,e=s.match(re)||[],d=s.replace(re,"").replace(/\D/g,"");if(d.length===11&&d[0]==="1")d=d.slice(1);return{e:e,d:d}}
+function cn(s){var c=cinfo(s);return c.e.length?c.e.join(","):c.d}
+function isPaid(v){return !/^(no|n|unpaid|pending|false|0)$/i.test((v||"").trim())}
+function isDel(o){return o.method==="delivery"}
+function canon(s){s=String(s||"").trim();if(!s)return"";var m=S.offered.filter(function(x){return nk(x)===nk(s)})[0];return m||s}
+function slotOf(o){var t=o.slot&&o.slot.trim();return t?(OTRE.test(t)?OT:t):NO}
+function skey(s){if(s===NO)return 9e9;if(s===OT)return 8e9;var t=s.toLowerCase(),d=9,dm=t.match(/(\d{1,2})\/(\d{1,2})/);
+ if(dm){d=+dm[1]*40+ +dm[2];t=t.replace(dm[0],"")}else DAYS.forEach(function(x,i){if(t.indexOf(x)>-1&&d===9)d=i});
+ var m=t.match(/(\d{1,2})(?::(\d\d))?\s*(am|pm)?/),h=m?+m[1]+(m[2]?m[2]/60:0):0;
+ if(m){if(m[3]==="pm"&&h<12)h+=12;else if(!m[3]&&/pm/.test(t)&&h<12)h+=12;else if(m[3]==="am"&&h===12)h=0}return d*100+h}
+function slots(){var m={};S.orders.forEach(function(o){if(isDel(o))return;var k=slotOf(o);(m[k]=m[k]||[]).push(o)});
+ return Object.keys(m).sort(function(a,b){return skey(a)-skey(b)||(a<b?-1:1)}).map(function(k){return{name:k,orders:m[k]}})}
+function units(a){return a.reduce(function(n,o){return n+o.qty},0)}
+function parseCSV(t){var rows=[],r=[],c="",q=false;
+ for(var i=0;i<t.length;i++){var ch=t[i];
+  if(q){if(ch==='"'){if(t[i+1]==='"'){c+='"';i++}else q=false}else c+=ch}
+  else if(ch==='"')q=true;else if(ch===","||ch==="\t"){r.push(c);c=""}
+  else if(ch==="\n"||ch==="\r"){if(ch==="\r"&&t[i+1]==="\n")i++;r.push(c);c="";if(r.some(function(x){return x.trim()}))rows.push(r);r=[]}
+  else c+=ch}
+ r.push(c);if(r.some(function(x){return x.trim()}))rows.push(r);return rows}
+function colKey(h){h=h.trim().toLowerCase();
+ if(/timestamp/.test(h))return"ts";
+ if(/order\s*(#|no|num|id)|^id$/.test(h))return"no";
+ if(/address|shipping/.test(h))return"addr";
+ if(/receive|pickup or delivery|delivery or pickup|handoff/.test(h))return"method";
+ if(/slot|pick\s*-?up (time|date)|availab|window|^time|when/.test(h))return"slot";
+ if(/paid|payment/.test(h))return"paid";
+ if(/^(full\s*)?name|customer/.test(h))return"name";
+ if(/phone|email|contact/.test(h))return"contact";
+ if(/item|product|^order$/.test(h))return"item";
+ if(/size/.test(h))return"size";
+ if(/qty|quantity/.test(h))return"qty";
+ if(/note|comment|special/.test(h))return"notes";return""}
+function parseRows(text){var rows=parseCSV(text);if(rows.length<2)return[];var h=rows[0].map(colKey),out=[];
+ rows.slice(1).forEach(function(r){var o={};h.forEach(function(k,i){if(!k)return;var v=(r[i]||"").trim();if(v&&!o[k])o[k]=v});if(o.name)out.push(o)});return out}
+function tkey(o){return o.ts?"t:"+nz(o.ts)+"|"+nz(o.name):""}
+function nkey(o){return"n:"+nz(o.name)+"|"+cn(o.contact)+"|"+nz(o.size)+"|"+nz(o.item||"Hoodie")}
+function syncRows(list){var added=0,upd=0,same=0,byT={},byN={};
+ S.orders.forEach(function(o){if(o.key)byT[o.key]=o;byN[nkey(o)]=o});
+ list.forEach(function(r){var tk=tkey(r),ex=(tk&&byT[tk])||byN[nkey(r)],method=/deliver|ship/i.test(r.method||"")?"delivery":"pickup";
+  if(!ex){var o={id:uid(),key:tk,name:r.name,contact:r.contact||"",item:r.item||"Hoodie",size:r.size||"",qty:Math.max(1,parseInt(r.qty)||1),paid:isPaid(r.paid),method:method,addr:r.addr||"",slot:canon(r.slot||""),notes:r.notes||"",packed:false,done:false,created:Date.now()};
+   S.orders.push(o);if(tk)byT[tk]=o;byN[nkey(o)]=o;added++;return}
+  var ch=false;function set(k,v){if(v&&ex[k]!==v){ex[k]=v;ch=true}}
+  if(tk&&!ex.key)ex.key=tk;
+  set("name",r.name);set("contact",r.contact);set("size",r.size);set("addr",r.addr);set("slot",canon(r.slot||""));
+  if(r.method&&ex.method!==method){ex.method=method;ch=true}
+  if(ch)upd++;else same++});
+ return{added:added,upd:upd,same:same}}
+
+var $=function(i){return document.getElementById(i)};
+function load(){S={orders:[],team:[],staff:{},offered:["Tuesday 12–2 PM"]}}
+function save(){if(typeof CLOUD!=="undefined"&&CLOUD)queue()}
+function isStaff(){return document.body.classList.contains("staff")}
+function say(t){var e=$("toast");e.textContent=t;e.hidden=false;clearTimeout(say.t);say.t=setTimeout(function(){e.hidden=true},5000)}
+function age(o){return o.created?Math.floor((Date.now()-o.created)/864e5):0}
+function late(o){return !o.done&&age(o)>=7}
+function gname(n){return n}
+function tab(n){if(!isStaff())return;["dash","team"].forEach(function(t){$("tab-"+t).hidden=t!==n});
+ document.querySelectorAll("#nav button").forEach(function(b){b.setAttribute("aria-selected",b.dataset.tab===n)});render()}
+document.querySelectorAll("#nav button").forEach(function(b){b.onclick=function(){tab(b.dataset.tab)}});
+function orderRow(o,armed){var late7=late(o);
+ return'<div class="o'+(o.done?" done":"")+'"><label class="ck"><input type="checkbox" data-pk="'+o.id+'"'+(o.packed?" checked":"")+'>Bagged</label>'+
+ '<div class="main"><b>'+esc(o.name)+'</b><span class="mute"> '+esc(o.contact)+'</span>'+(!o.paid?'<span class="tag w">Unpaid</span>':"")+(late7?'<span class="tag w">'+age(o)+'d</span>':"")+
+ '<div class="sub">'+esc(o.item)+' '+esc(o.size)+(o.qty>1?' × '+o.qty:"")+(isDel(o)&&o.addr?' · '+esc(o.addr):"")+(o.notes?' · '+esc(o.notes):"")+'</div></div>'+
+ '<label class="ck"><input type="checkbox" data-dn="'+o.id+'"'+(o.done?" checked":"")+'>Handed off</label>'+
+ '<button class="x" data-del="'+o.id+'" aria-label="Delete order">'+(armed===o.id?"Delete?":"×")+'</button></div>'}
+var armD=null,armT=null;
+function groups(){var q=$("q").value.toLowerCase().trim(),hd=$("hd").checked;
+ function ok(o){if(hd&&o.done)return false;return !q||(o.name+" "+o.contact+" "+o.slot+" "+o.addr+" "+o.size).toLowerCase().indexOf(q)>-1}
+ var g=slots().map(function(s){return{name:s.name,all:s.orders,list:s.orders.filter(ok),del:false}});
+ var dl=S.orders.filter(isDel);if(dl.length)g.push({name:"Delivery",all:dl,list:dl.filter(ok),del:true});return g}
+function render(){if(!isStaff())return;
+ var open=S.orders.filter(function(o){return !o.done}),od=open.filter(late).length,nos=open.filter(function(o){return !isDel(o)&&slotOf(o)===NO}).length;
+ $("stats").innerHTML=[[S.orders.length,"Orders",""],[units(open),"To hand out",""],[S.orders.length-open.length,"Handed off",""],[nos,"No slot",""],[od,"Overdue",od?"w":""]].map(function(s){return'<div class="'+s[2]+'"><b>'+s[0]+'</b><span>'+s[1]+'</span></div>'}).join("");
+ var m={};open.forEach(function(o){var k=o.item+" "+o.size;m[k]=(m[k]||0)+o.qty});
+ $("pack").innerHTML=Object.keys(m).sort().map(function(k){return'<span class="chip">'+esc(k)+'<i>× '+m[k]+'</i></span>'}).join("");
+ var gs=groups(),sel=$("fslot"),cur=sel.value;
+ sel.innerHTML='<option value="">All slots</option>'+gs.map(function(g){return'<option>'+esc(g.name)+'</option>'}).join("");sel.value=gs.some(function(g){return g.name===cur})?cur:"";
+ var fs=sel.value,h="";
+ gs.forEach(function(g){if(fs&&g.name!==fs)return;if(!g.list.length)return;var d=g.all.filter(function(o){return o.done}).length,real=!g.del&&g.name!==NO&&g.name!==OT;
+  h+='<div class="ghead"><b>'+esc(g.name)+'</b><span class="meta">'+d+' of '+g.all.length+' handed off · '+units(g.all)+' units</span>'+
+  (real?'<select data-staff="'+esc(g.name)+'" aria-label="Staff for '+esc(g.name)+'"><option value="">No one</option>'+S.team.map(function(t){return'<option'+(S.staff[g.name]===t?" selected":"")+'>'+esc(t)+'</option>'}).join("")+'</select>':"")+'</div>'+
+  g.list.slice().sort(function(a,b){return a.name.toLowerCase()>b.name.toLowerCase()?1:-1}).map(function(o){return orderRow(o,armD)}).join("")});
+ $("groups").innerHTML=h||'<div class="empty">'+(S.orders.length?"No matching orders":"No orders yet")+'</div>';
+ var op=S.offered.slice();slots().forEach(function(s){if(s.name!==NO&&s.name!==OT&&op.indexOf(s.name)<0)op.push(s.name)});
+ $("slotopts").innerHTML=op.map(function(x){return'<option value="'+esc(x)+'">'}).join("");
+ $("chips").innerHTML=S.team.map(function(t,i){return'<span class="chip">'+esc(t)+'<button data-rm="'+i+'" aria-label="Remove '+esc(t)+'">×</button></span>'}).join("");
+ $("offchips").innerHTML=S.offered.map(function(t,i){return'<span class="chip">'+esc(t)+'<button data-ro="'+i+'" aria-label="Remove '+esc(t)+'">×</button></span>'}).join("")}
+["q","fslot","hd"].forEach(function(i){$(i).oninput=$(i).onchange=function(){render()}});
+$("b-sync").onclick=function(){$("p-sync").hidden=!$("p-sync").hidden;$("p-add").hidden=true};
+$("b-add").onclick=function(){$("p-add").hidden=!$("p-add").hidden;$("p-sync").hidden=true;if(!$("p-add").hidden)$("a-name").focus()};
+$("a-method").onchange=function(){$("a-addr").hidden=this.value!=="delivery"};
+$("go-sync").onclick=function(){var l=parseRows($("csv").value);if(!l.length){$("syncres").textContent="No orders found. Include the header row.";return}
+ var r=syncRows(l);$("csv").value="";$("syncres").textContent=r.added+" new · "+r.upd+" updated · "+r.same+" unchanged";save();render()};
+$("a-go").onclick=function(){var n=$("a-name").value.trim(),del=$("a-method").value==="delivery";
+ if(!n){$("a-msg").textContent="Name required";return}if(del&&!$("a-addr").value.trim()){$("a-msg").textContent="Address required";return}$("a-msg").textContent="";
+ S.orders.push({id:uid(),key:"",name:n,contact:$("a-contact").value.trim(),item:$("a-item").value.trim()||"Hoodie",size:$("a-size").value,qty:Math.max(1,parseInt($("a-qty").value)||1),paid:true,method:del?"delivery":"pickup",addr:$("a-addr").value.trim(),slot:canon($("a-slot").value),notes:"",packed:false,done:false,created:Date.now()});
+ ["a-name","a-contact","a-addr"].forEach(function(i){$(i).value=""});$("a-qty").value=1;save();render();$("a-name").focus()};
+var clrArm=false,clrT=null;
+$("b-clear").onclick=function(){var b=$("b-clear");if(!clrArm){clrArm=true;b.textContent="Click again to confirm";clrT=setTimeout(function(){clrArm=false;b.textContent="Clear all orders"},4000);return}
+ clearTimeout(clrT);clrArm=false;b.textContent="Clear all orders";S.orders=[];S.staff={};save();render();say("Orders cleared")};
+$("t-add").onclick=function(){var n=$("t-name").value.trim();if(n&&S.team.indexOf(n)<0){S.team.push(n);$("t-name").value="";save();render()}$("t-name").focus()};
+$("t-name").onkeydown=function(e){if(e.key==="Enter")$("t-add").click()};
+$("o-add").onclick=function(){var n=$("o-name").value.trim();if(n&&S.offered.indexOf(n)<0){S.offered.push(n);$("o-name").value="";save();render()}$("o-name").focus()};
+$("o-name").onkeydown=function(e){if(e.key==="Enter")$("o-add").click()};
+$("assign").onclick=function(){if(!S.team.length){$("amsg").textContent="Add a team member first";return}$("amsg").textContent="";
+ var ld={};S.team.forEach(function(t){ld[t]=0});S.staff={};
+ slots().filter(function(s){return s.name!==NO&&s.name!==OT}).sort(function(a,b){return b.orders.length-a.orders.length}).forEach(function(s){
+  var best=S.team.slice().sort(function(a,b){return ld[a]-ld[b]})[0];S.staff[s.name]=best;ld[best]+=s.orders.length});
+ save();render();tab("dash")};
+function find(id){return S.orders.filter(function(x){return x.id===id})[0]}
+document.addEventListener("change",function(e){var t=e.target,d=t.dataset,o;
+ if(d.staff){if(t.value)S.staff[d.staff]=t.value;else delete S.staff[d.staff]}
+ else if(d.pk&&(o=find(d.pk)))o.packed=t.checked;
+ else if(d.dn&&(o=find(d.dn)))o.done=t.checked;
+ else return;save();render()});
+document.addEventListener("click",function(e){var d=e.target.dataset;if(!d)return;
+ if(d.del){if(armD===d.del){S.orders=S.orders.filter(function(x){return x.id!==d.del});armD=null;save();render()}
+  else{armD=d.del;clearTimeout(armT);armT=setTimeout(function(){armD=null;render()},3000);render()}}
+ else if(d.ro){S.offered.splice(+d.ro,1);save();render()}
+ else if(d.rm){var n=S.team.splice(+d.rm,1)[0];Object.keys(S.staff).forEach(function(k){if(S.staff[k]===n)delete S.staff[k]});save();render()}});
+
+var SB="https://nmhwsreoygspnmxwjorx.supabase.co",KEYP="sb_publishable_pkvrQh4a8KUF4i1zffjdTQ_gfe9zTZ_",SKEY="spero-session";
+var SES=null,CLOUD=null,dirty=false,writing=false,lastRev=0,tmr=null;
+function setSync(t){var e=$("sync");if(e)e.textContent=t}
+function sesSave(){try{if(SES)localStorage.setItem(SKEY,JSON.stringify(SES));else localStorage.removeItem(SKEY)}catch(e){}}
+function sesLoad(){try{SES=JSON.parse(localStorage.getItem(SKEY)||"null")}catch(e){SES=null}}
+async function authCall(path,body){var r=await fetch(SB+"/auth/v1/"+path,{method:"POST",headers:{apikey:KEYP,"Content-Type":"application/json"},body:JSON.stringify(body)}),j={};
+ try{j=await r.json()}catch(e){}
+ if(!r.ok)throw new Error(j.error_description||j.msg||j.message||"Sign-in failed");return j}
+function setSes(j){SES={access_token:j.access_token,refresh_token:j.refresh_token,expires_at:Date.now()+(j.expires_in||3600)*1000-60000,email:(j.user&&j.user.email)||(SES&&SES.email)||""};sesSave()}
+async function token(){if(!SES)throw new Error("Signed out");
+ if(Date.now()>SES.expires_at){try{setSes(await authCall("token?grant_type=refresh_token",{refresh_token:SES.refresh_token}))}catch(e){SES=null;sesSave();showLogin("Your session expired. Please sign in again.");throw e}}
+ return SES.access_token}
+async function api(method,path,body,extra){var tk=await token(),h={apikey:KEYP,Authorization:"Bearer "+tk,"Content-Type":"application/json"};if(extra)for(var k in extra)h[k]=extra[k];
+ var r=await fetch(SB+"/rest/v1/"+path,{method:method,headers:h,body:body?JSON.stringify(body):undefined});
+ if(!r.ok){var tx="";try{tx=await r.text()}catch(e){}throw new Error(tx||("Error "+r.status))}
+ try{return await r.json()}catch(e){return null}}
+function queue(){dirty=true;setSync("Saving…");clearTimeout(tmr);tmr=setTimeout(flush,600)}
+function flush(){if(!CLOUD||writing||!dirty)return;writing=true;dirty=false;var rev=Date.now();lastRev=rev;
+ api("POST","planner_state",{id:"main",data:{orders:S.orders,team:S.team,staff:S.staff,offered:S.offered,rev:rev},updated_at:new Date().toISOString()},{Prefer:"resolution=merge-duplicates,return=minimal"}).then(
+  function(){writing=false;if(dirty)flush();else setSync("Saved and shared with your team.")},
+  function(e){writing=false;dirty=true;setSync("Couldn’t save to the shared planner. Check your connection. "+String(e.message).slice(0,100))})}
+function applyRemote(d){S.orders=JSON.parse(JSON.stringify(d.orders||[]));S.team=JSON.parse(JSON.stringify(d.team||[]));S.staff=JSON.parse(JSON.stringify(d.staff||{}));if(Array.isArray(d.offered))S.offered=JSON.parse(JSON.stringify(d.offered))}
+async function pull(){if(!CLOUD)return;
+ try{var rows=await api("GET","planner_state?id=eq.main&select=data");
+  if(rows&&rows.length){var d=rows[0].data||{};if(!(d.rev&&d.rev===lastRev)){if(dirty||writing)return;applyRemote(d);render()}setSync("Shared with your team. Updates appear within about 15 seconds.")}
+  else if(S.orders.length||S.team.length)queue();else setSync("Connected. Add your first order.")}
+ catch(e){if(CLOUD)setSync("Couldn’t reach the shared planner. "+String(e.message).slice(0,100))}}
+function showLogin(msg){document.body.classList.remove("staff");CLOUD=null;dirty=false;writing=false;clearTimeout(tmr);load();$("who").textContent="";$("login").hidden=false;$("lmsg").textContent=msg||""}
+async function enterApp(){
+ try{var rows=await api("GET","staff_emails?select=email");if(!rows||!rows.length){SES=null;sesSave();showLogin("This account isn’t on the staff list. Ask your admin to add your email.");return}}
+ catch(e){if(SES)showLogin("Couldn’t reach the server. "+String(e.message).slice(0,100));return}
+ document.body.classList.add("staff");$("login").hidden=true;$("who").textContent=SES.email;CLOUD=true;load();render();tab("dash");setSync("Loading…");await pull()}
+$("lbtn").onclick=async function(){var e=$("l-email").value.trim().toLowerCase(),p=$("l-pass").value;if(!e||!p){$("lmsg").textContent="Enter your email and password.";return}
+ $("lmsg").textContent="Signing in…";
+ try{setSes(await authCall("token?grant_type=password",{email:e,password:p}));$("l-pass").value="";await enterApp()}
+ catch(x){$("lmsg").textContent=/invalid/i.test(x.message)?"That email or password isn’t right.":x.message}};
+$("l-pass").onkeydown=function(e){if(e.key==="Enter")$("lbtn").click()};
+$("signout").onclick=function(){SES=null;sesSave();showLogin("You’re signed out.")};
+setInterval(function(){if(CLOUD&&!dirty&&!writing)pull()},15000);
+document.addEventListener("visibilitychange",function(){if(!document.hidden&&CLOUD&&!dirty&&!writing)pull()});
+load();sesLoad();
+if(SES){$("lmsg").textContent="";enterApp()}else showLogin("");
+})();
+</script>
+</body>
+</html>
